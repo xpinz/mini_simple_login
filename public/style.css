@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   style.css – JDonloder Login Page
+   style.css – DEX Management Inventory Login
    Palette (solid only, no gradients):
      #78A4CB  → primary  (steel blue)
      #95BDD7  → secondary (sky blue)
@@ -22,13 +22,13 @@
   --text-mid:   #3D5A73;
   --text-light: #6B8FA8;
   --border:     #C8DDE9;
-  --error-odd:  #000000;   /* black – odd attempts  */
-  --error-even: #CC1111;   /* red  – even attempts  */
+  --error-odd:  #000000;
+  --error-even: #CC1111;
   --success:    #1A7A45;
   --input-bg:   #F4F9FC;
   --card-bg:    #FFFFFF;
-  --shadow:     rgba(120, 164, 203, 0.18);
-  --radius:     12px;
+  --shadow:     rgba(120, 164, 203, 0.20);
+  --radius:     16px;
   --radius-sm:  8px;
   --font:       'Inter', system-ui, sans-serif;
   --transition: 0.22s ease;
@@ -44,120 +44,137 @@ html, body {
 
 /* ── Page Layout ── */
 .page-wrapper {
-  display: flex;
   min-height: 100vh;
-}
-
-/* ── Left Brand Panel ── */
-.brand-panel {
-  flex: 0 0 42%;
-  background-color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 40px;
+  padding: 32px 16px;
+  background-color: var(--accent);
 }
 
-.brand-inner {
-  max-width: 320px;
-}
-
-.brand-logo {
-  margin-bottom: 28px;
-}
-
-.brand-name {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: -0.5px;
-  margin-bottom: 8px;
-}
-
-.brand-tagline {
-  font-size: 0.95rem;
-  font-weight: 400;
-  color: var(--accent);
-  margin-bottom: 40px;
-  letter-spacing: 0.3px;
-}
-
-.brand-features {
-  list-style: none;
+/* ── Form Panel ── */
+.form-panel {
+  width: 100%;
+  max-width: 520px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
-.brand-features li {
+/* ── Top Brand Bar ── */
+.top-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 0.9rem;
-  color: var(--white);
-  font-weight: 500;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 0 4px;
 }
 
-.feature-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  flex-shrink: 0;
+.top-brand-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.2px;
 }
 
-/* ── Right Form Panel ── */
-.form-panel {
-  flex: 1;
-  background-color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 24px;
-}
-
+/* ── Card ── */
 .form-card {
   background-color: var(--card-bg);
   border-radius: var(--radius);
-  box-shadow: 0 8px 32px var(--shadow);
-  padding: 44px 40px;
-  width: 100%;
-  max-width: 420px;
+  box-shadow: 0 10px 40px var(--shadow);
   border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── CTA Block ── */
+.cta-block {
+  background-color: var(--primary);
+  padding: 36px 40px 32px;
+}
+
+.cta-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.cta-accent {
+  color: var(--accent);
+}
+
+.cta-sub {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.65;
+  margin-bottom: 22px;
+  max-width: 380px;
+}
+
+.cta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: var(--secondary);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.1px;
+}
+
+.badge svg {
+  flex-shrink: 0;
+}
+
+/* ── Divider ── */
+.divider {
+  height: 3px;
+  background-color: var(--accent);
+}
+
+/* ── Form Section ── */
+.form-section {
+  padding: 36px 40px 40px;
 }
 
 /* ── Form Header ── */
-.form-logo-mobile {
-  display: none;
-  margin-bottom: 16px;
-}
-
 .form-title {
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   letter-spacing: -0.3px;
 }
 
 .form-subtitle {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--text-light);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 /* ── Field Groups ── */
 .field-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .field-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-mid);
-  margin-bottom: 8px;
+  margin-bottom: 7px;
   letter-spacing: 0.2px;
+  text-transform: uppercase;
 }
 
 .input-wrapper {
@@ -168,7 +185,7 @@ html, body {
 
 .input-icon {
   position: absolute;
-  left: 14px;
+  left: 13px;
   color: var(--secondary);
   display: flex;
   align-items: center;
@@ -178,7 +195,7 @@ html, body {
 
 .field-input {
   width: 100%;
-  padding: 12px 44px 12px 44px;
+  padding: 11px 42px 11px 40px;
   font-family: var(--font);
   font-size: 0.95rem;
   color: var(--text-dark);
@@ -198,7 +215,6 @@ html, body {
   background-color: var(--white);
 }
 
-.field-input:focus + .input-icon,
 .input-wrapper:focus-within .input-icon {
   color: var(--primary);
 }
@@ -206,7 +222,7 @@ html, body {
 /* Toggle password button */
 .toggle-pass {
   position: absolute;
-  right: 12px;
+  right: 11px;
   background: none;
   border: none;
   cursor: pointer;
@@ -226,9 +242,9 @@ html, body {
 .status-msg {
   min-height: 20px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
@@ -266,7 +282,7 @@ html, body {
   padding: 13px 24px;
   font-family: var(--font);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--white);
   background-color: var(--primary);
   border: none;
@@ -277,13 +293,13 @@ html, body {
   justify-content: center;
   gap: 10px;
   transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 .btn-login:hover {
   background-color: var(--secondary);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px var(--shadow);
+  box-shadow: 0 5px 16px var(--shadow);
 }
 
 .btn-login:active {
@@ -297,79 +313,50 @@ html, body {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-  opacity: 0.75;
+  opacity: 0.72;
 }
 
 /* ── Spinner ── */
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2.5px solid rgba(255,255,255,0.4);
+  border: 2.5px solid rgba(255,255,255,0.38);
   border-top-color: #FFFFFF;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ── Form Footer ── */
-.form-footer {
-  margin-top: 28px;
-  border-top: 1px solid var(--border);
-  padding-top: 18px;
-  text-align: center;
-}
-
-.footer-note {
-  font-size: 0.78rem;
-  color: var(--text-light);
-  line-height: 1.8;
-}
-
-.footer-note code {
-  background-color: var(--input-bg);
-  color: var(--text-mid);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  border: 1px solid var(--border);
-}
-
 /* ── Responsive ── */
-@media (max-width: 768px) {
-  .brand-panel {
-    display: none;
-  }
-
-  .form-logo-mobile {
-    display: flex;
-  }
-
-  .form-card {
-    padding: 36px 24px;
-    box-shadow: none;
-    border: none;
-    background-color: var(--white);
-  }
-
-  .form-panel {
-    align-items: flex-start;
-    padding: 32px 16px;
-  }
-
+@media (max-width: 540px) {
   .page-wrapper {
-    background-color: var(--accent);
+    padding: 20px 12px;
+    align-items: flex-start;
+  }
+
+  .cta-block {
+    padding: 28px 24px 24px;
+  }
+
+  .cta-title {
+    font-size: 1.35rem;
+  }
+
+  .form-section {
+    padding: 28px 24px 32px;
+  }
+
+  .cta-badges {
+    gap: 6px;
   }
 }
 
-@media (max-width: 400px) {
-  .form-card {
-    padding: 28px 16px;
-  }
+@media (max-width: 380px) {
+  .cta-block { padding: 22px 18px 20px; }
+  .form-section { padding: 22px 18px 26px; }
 }

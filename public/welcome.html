@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="You are successfully logged in to JDonloder." />
+  <title>Welcome – JDonloder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #78A4CB;
+      --secondary: #95BDD7;
+      --accent:    #B4E1EB;
+      --white:     #FFFFFF;
+      --text-dark: #1A2B3C;
+      --text-mid:  #3D5A73;
+      --text-light:#6B8FA8;
+      --border:    #C8DDE9;
+      --shadow:    rgba(120,164,203,0.18);
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--accent);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .welcome-card {
+      background-color: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px var(--shadow);
+      padding: 56px 48px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid var(--border);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .check-icon {
+      width: 72px;
+      height: 72px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+    }
+
+    .check-icon svg {
+      color: var(--white);
+    }
+
+    .welcome-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .welcome-title span {
+      color: var(--primary);
+    }
+
+    .welcome-sub {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .info-box {
+      background-color: #F4F9FC;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+    }
+
+    .info-box p {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .info-box code {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      background-color: var(--primary);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: var(--secondary);
+      transform: translateY(-1px);
+    }
+
+    .btn-logout:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      .welcome-card { padding: 36px 24px; }
+      .welcome-title { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-card" role="main">
+    <div class="check-icon" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <h1 class="welcome-title">Welcome, <span id="usernameDisplay">User</span>!</h1>
+    <p class="welcome-sub">You have successfully logged in to JDonloder.<br />Your session is now active.</p>
+
+    <div class="info-box">
+      <p>Logged in as: <code id="usernameInfo">—</code></p>
+      <p>Login time: <code id="loginTime">—</code></p>
+    </div>
+
+    <a href="/" class="btn-logout" id="logoutBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Back to Login
+    </a>
+  </div>
+
+  <script>
+    // Read username from URL query string
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const user = params.get('user') || 'User';
+      const safeUser = user.replace(/[<>"'&]/g, '');
+      document.getElementById('usernameDisplay').textContent = safeUser;
+      document.getElementById('usernameInfo').textContent = safeUser;
+
+      // Display current time (WIB UTC+7)
+      const now = new Date();
+      const options = {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+      };
+      document.getElementById('loginTime').textContent =
+        now.toLocaleString('id-ID', options) + ' WIB';
+    })();
+  </script>
+</body>
+</html>

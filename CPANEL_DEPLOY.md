@@ -1,208 +1,221 @@
-# 🚀 Deploy Tutorial: DEX Management Inventory
-## Rumahweb cPanel → File Manager / Node.js App
+# 🚀 Deploy Tutorial: cPanel File Manager → public_html
+## DEX Management Inventory (PHP version)
 
 ---
+
+## Overview
+
+This project is now **pure PHP** — no Node.js required. Upload files to `public_html` on Rumahweb cPanel and it works immediately.
+
+---
+
+## 📋 What You Need
+
+- [ ] Rumahweb cPanel access
+- [ ] Domain `deexinventorymanagement.site` pointed to hosting
+- [ ] PHP ≥ 7.4 (usually pre-installed)
+- [ ] **`pdo_pgsql` PHP extension** enabled (see Step 2)
+
+---
+
+## Files to Upload
+
+These are the **only files** you need to upload into `public_html/`:
+
+```
+public_html/
+├── .htaccess            ← Security rules (protect config.php)
+├── config.php           ← Database credentials
+├── index.html           ← Login page
+├── style.css            ← Styles
+├── script.js            ← Client-side login logic
+├── welcome.html         ← Welcome page after login
+├── check.php            ← Server diagnostic (DELETE after testing)
+├── query_users.php      ← View users table (DELETE or protect in production)
+└── api/
+    └── login.php        ← Login API endpoint
+```
+
+---
+
+## Step-by-Step Deployment
+
+### Step 1 – Login to cPanel
+
+1. Open: `https://deexinventorymanagement.site:2083`
+   *(or the cPanel link from your Rumahweb welcome email)*
+2. Enter your cPanel **username** and **password**
+
+---
+
+### Step 2 – Check if PostgreSQL Extension is Enabled
 
 > [!IMPORTANT]
-> **Node.js apps CANNOT run directly from `public_html` like PHP or static HTML.**
-> Node.js requires a process manager. In cPanel, this is handled by **"Setup Node.js App"** (Phusion Passenger).
-> This tutorial covers the correct method to deploy via cPanel on Rumahweb.
+> PHP needs the `pdo_pgsql` extension to connect to Neon PostgreSQL.
+> Most Rumahweb plans have it available but it might need to be enabled.
+
+1. In cPanel, go to **"Software"** → **"Select PHP Version"**
+2. Find `pdo_pgsql` and `pgsql` in the extensions list
+3. **Check the checkbox** next to both to enable them
+4. Click **"Save"** (or **"Apply"**)
+
+If you don't see "Select PHP Version":
+- Contact Rumahweb support: *"Please enable the pdo_pgsql extension for my PHP."*
 
 ---
 
-## 📋 Prerequisites
+### Step 3 – Open File Manager
 
-Before you start, make sure you have:
-- [ ] Active Rumahweb hosting account with **cPanel access**
-- [ ] Domain pointed to your hosting (e.g. `deexinventorymanagement.site`)
-- [ ] Files ready: download/clone `https://github.com/xpinz/mini_simple_login`
-- [ ] Your Neon `DATABASE_URL` connection string
+1. In cPanel dashboard, click **"File Manager"**
+2. Navigate to **`public_html`** folder
+3. **Delete or backup** any old files in `public_html` (if it shows an old website)
 
 ---
 
-## Method A – cPanel Node.js App (Recommended)
+### Step 4 – Create the `api/` Subfolder
 
-This is the proper way to run a Node.js Express app on cPanel hosting.
-
----
-
-### Step 1 – Log in to cPanel
-
-1. Open your browser → go to: `https://deexinventorymanagement.site:2083`
-   *(or use the link Rumahweb sent in your welcome email)*
-2. Enter your **cPanel username** and **password**
-3. You are now inside the cPanel dashboard
+1. Inside `public_html`, click **"+ Folder"** in the top toolbar
+2. Name it: `api`
+3. Click **"Create New Folder"**
 
 ---
 
-### Step 2 – Open "Setup Node.js App"
+### Step 5 – Upload Files
 
-1. In the cPanel dashboard, scroll to the **"Software"** section
-2. Click **"Setup Node.js App"**
+> [!TIP]
+> You can download all files from GitHub:
+> **https://github.com/xpinz/mini_simple_login**
+> Click the green **"Code"** button → **"Download ZIP"** → extract on your computer.
 
-   > If you don't see "Setup Node.js App", your hosting plan may not support Node.js.
-   > Contact Rumahweb support and ask: *"Does my plan support Node.js via Phusion Passenger?"*
+#### Upload to `public_html/` (root level):
 
----
+1. Click **"Upload"** in the top toolbar
+2. Drag & drop or select these files:
+   - `.htaccess`
+   - `config.php`
+   - `check.php`
+   - `query_users.php`
 
-### Step 3 – Create a New Node.js Application
-
-Click the **"Create Application"** button (top right). Fill in the form:
-
-| Field | Value |
-|---|---|
-| **Node.js version** | `18` (or highest available) |
-| **Application mode** | `Production` |
-| **Application root** | `mini_simple_login` *(folder name in your home directory)* |
-| **Application URL** | Select your domain: `deexinventorymanagement.site` |
-| **Application startup file** | `server.js` |
-
-Click **"Create"** to save.
-
----
-
-### Step 4 – Upload Project Files via File Manager
-
-1. Go back to cPanel home → click **"File Manager"**
-2. Navigate to your **home directory** (e.g. `/home/yourusername/`)
-3. You should see a folder called `mini_simple_login` that was created in Step 3
-
-   > ⚠️ Do NOT use `public_html` — put the app files in the `mini_simple_login` folder created by Node.js App setup.
-
-4. **Upload these files** into `mini_simple_login/`:
-
-   Go to **File Manager → Upload** button, then upload the following files:
-   
-   | File | Upload? |
-   |---|---|
-   | `server.js` | ✅ Yes |
-   | `package.json` | ✅ Yes |
-   | `routes/auth.js` | ✅ Yes (create `routes/` subfolder first) |
-   | `public/index.html` | ✅ Yes (create `public/` subfolder first) |
-   | `public/style.css` | ✅ Yes |
-   | `public/script.js` | ✅ Yes |
-   | `public/welcome.html` | ✅ Yes |
-   | `.env` | ✅ Yes (see Step 5) |
-   | `node_modules/` | ❌ No — install via terminal (Step 6) |
-   | `.git/` | ❌ No |
-   | `ssh_deploy.js` | ❌ No |
-
-#### How to create subfolders in File Manager:
-1. Click **"+ Folder"** (top left toolbar)
-2. Type `routes` → Create
-3. Enter the `routes` folder → Upload → select `auth.js`
-4. Go back → create `public` folder → Upload `index.html`, `style.css`, `script.js`, `welcome.html`
-
----
-
-### Step 5 – Create the `.env` File
-
-1. In File Manager, navigate into the `mini_simple_login` folder
-2. Click **"+ File"** → name it `.env` → Create
-3. Right-click the `.env` file → **Edit**
-4. Paste the following content:
-
-```
-DATABASE_URL=postgresql://neondb_owner:npg_PtZKR8Uk1Tbr@ep-billowing-cell-aojlsjmr-pooler.c-2.ap-southeast-1.aws.neon.tech/jdonloder_auth?sslmode=require&channel_binding=require
-PORT=3000
-```
-
-5. Click **Save Changes**
-
-> [!CAUTION]
-> Never share your `.env` file or commit it to GitHub. It contains your database credentials.
-
----
-
-### Step 6 – Install Dependencies via cPanel Terminal
-
-> [!NOTE]
-> You need to run `npm install` to install Node.js packages. Use the cPanel Terminal for this.
-
-1. In cPanel, go to **"Advanced"** section → click **"Terminal"**
-   *(If Terminal is not available, use SSH: `ssh yourusername@deexinventorymanagement.site`)*
-
-2. In the terminal, run:
-
-```bash
-# Go to your app folder
-cd ~/mini_simple_login
-
-# Install packages listed in package.json
-npm install --omit=dev
-
-# Verify node_modules was created
-ls node_modules | head -5
-```
-
-You should see folders like `express`, `pg`, `dotenv` in `node_modules/`.
-
----
-
-### Step 7 – Start the Application
-
-1. Go back to cPanel → **"Setup Node.js App"**
-2. Find your application `mini_simple_login` in the list
-3. Click the **▶ Start** button (or **Restart** if already started)
-4. Status should show: **"Running"**
-
----
-
-### Step 8 – Verify It's Working
-
-1. Open your browser → visit: **`https://deexinventorymanagement.site/`**
-2. You should see the DEX Management Inventory login page
-3. Test login with `admin` / `admin123` → should reach Welcome page
-4. Test with wrong credentials → should show "username or password incorrect"
-
----
-
-### Step 9 – Set Up HTTPS (if not already active)
-
-1. In cPanel, scroll to **"Security"** section → click **"SSL/TLS Status"**
-2. Find your domain → click **"Run AutoSSL"**
-3. Wait a few minutes → refresh the page
-4. Your site should now have a green padlock at `https://deexinventorymanagement.site/`
-
----
-
-## Method B – File Manager `public_html` (Static Fallback Only)
-
-> [!WARNING]
-> This method does **NOT** support the Node.js backend. The login form will not connect to PostgreSQL.
-> Use this ONLY to test the visual appearance of the frontend.
-
-If you only want to preview the UI design as a static page:
-
-1. cPanel → **File Manager** → open `public_html/`
-2. Upload only:
-   - `public/index.html` → rename to `index.html` in `public_html/`
+3. Now upload the frontend files from the `public/` folder of the downloaded repo:
+   - `public/index.html` → upload as `index.html`
    - `public/style.css` → upload as `style.css`
    - `public/script.js` → upload as `script.js`
    - `public/welcome.html` → upload as `welcome.html`
-3. Visit `https://deexinventorymanagement.site/`
 
-⚠️ Clicking "Sign In" will return a network error since there is no backend.
+#### Upload to `public_html/api/`:
+
+4. Navigate into the `api/` subfolder you created
+5. Upload:
+   - `api/login.php`
 
 ---
 
-## ♻️ Updating the App (After Code Changes)
+### Step 6 – Verify File Structure
 
-When you push new code to GitHub and want to update cPanel:
+After uploading, your `public_html` should look like this in File Manager:
 
-### Option A – Re-upload via File Manager
-1. Download the changed files from GitHub
-2. File Manager → navigate to `~/mini_simple_login/`
-3. Delete the old file → Upload the new version
-4. cPanel → Setup Node.js App → **Restart** the app
-
-### Option B – Use cPanel Terminal (Faster)
-```bash
-cd ~/mini_simple_login
-git pull origin master       # pull latest from GitHub
-npm install --omit=dev       # update packages if needed
 ```
-Then go to **Setup Node.js App → Restart**.
+public_html/
+├── .htaccess           ✅
+├── config.php          ✅
+├── index.html          ✅
+├── style.css           ✅
+├── script.js           ✅
+├── welcome.html        ✅
+├── check.php           ✅ (delete later)
+├── query_users.php     ✅ (delete later)
+└── api/
+    └── login.php       ✅
+```
+
+---
+
+### Step 7 – Run the Server Check
+
+1. Open your browser → go to:
+   **`https://deexinventorymanagement.site/check.php`**
+
+2. You should see a diagnostic page showing:
+
+   | Check | Expected |
+   |---|---|
+   | PHP Version | ✅ 7.4+ or 8.x |
+   | PDO Extension | ✅ Loaded |
+   | PDO PostgreSQL Driver | ✅ Loaded |
+   | Neon DB Connection | ✅ Connected – X users in table |
+
+3. **If PDO PostgreSQL says ❌ Missing:**
+   → Go back to Step 2 and enable `pdo_pgsql`
+   → If it's not available, contact Rumahweb support
+
+---
+
+### Step 8 – Test the Login Page
+
+1. Open: **`https://deexinventorymanagement.site/`**
+2. You should see the DEX Management Inventory login page
+
+3. **Test with correct credentials:**
+   - Username: `admin`
+   - Password: `admin123`
+   - Expected: Redirects to Welcome page ✅
+
+4. **Test with wrong credentials:**
+   - Username: `anything`
+   - Password: `anything`
+   - Expected: "username or password incorrect" ✅
+
+5. **Verify data was saved:**
+   - Open: **`https://deexinventorymanagement.site/query_users.php`**
+   - You should see the username you just typed in the Users Table
+
+---
+
+### Step 9 – Clean Up (Important!)
+
+> [!CAUTION]
+> Delete these files after confirming everything works.
+> They expose your database to anyone who visits the URL.
+
+1. Go to File Manager → `public_html`
+2. **Delete** `check.php` (server diagnostics — no longer needed)
+3. **Optionally delete** `query_users.php` (or password-protect it)
+
+---
+
+## ♻️ Updating Files in the Future
+
+When you push new code to GitHub:
+
+1. Download the updated files from GitHub
+2. cPanel → File Manager → `public_html`
+3. Delete the old file → Upload the new version
+4. Refresh the browser (`Ctrl + Shift + R`)
+
+That's it — no restart needed. PHP runs fresh on every request.
+
+---
+
+## 🔐 Optional: Password-Protect `query_users.php`
+
+Instead of deleting `query_users.php`, you can password-protect it:
+
+1. In cPanel, go to **"Security"** → **"Directory Privacy"**
+2. Navigate to `public_html` → click the folder name
+3. Check **"Password protect this directory"**
+4. Set a username and password
+5. Click Save
+
+Or add this to `.htaccess` to protect just `query_users.php`:
+
+```apache
+<Files "query_users.php">
+    AuthType Basic
+    AuthName "Admin Only"
+    AuthUserFile /home/yourusername/.htpasswd
+    Require valid-user
+</Files>
+```
 
 ---
 
@@ -210,41 +223,19 @@ Then go to **Setup Node.js App → Restart**.
 
 | Problem | Cause | Solution |
 |---|---|---|
-| "Setup Node.js App" not visible | Plan doesn't support Node.js | Contact Rumahweb support |
-| App shows "503 Service Unavailable" | App not started or crashed | Setup Node.js App → Start/Restart |
-| "Cannot find module 'express'" | npm install not run | Run `npm install` in Terminal |
-| DB connection error | Wrong `.env` or file missing | Check `.env` content, restart app |
-| Login form submits but nothing happens | `server.js` or `routes/auth.js` missing | Re-upload missing files |
-| Site shows old page | Browser cache | Press `Ctrl + Shift + R` (hard refresh) |
-| HTTPS not working | SSL not configured | cPanel → SSL/TLS → Run AutoSSL |
-
----
-
-## 📁 Final Folder Structure on cPanel Server
-
-```
-/home/yourusername/
-├── public_html/          ← Default website (other sites, NOT our app)
-│   └── (other files)
-└── mini_simple_login/    ← Our Node.js app lives HERE
-    ├── .env              ← DB credentials
-    ├── server.js         ← App entry point
-    ├── package.json
-    ├── node_modules/     ← Installed by npm install
-    ├── routes/
-    │   └── auth.js
-    └── public/
-        ├── index.html
-        ├── style.css
-        ├── script.js
-        └── welcome.html
-```
+| 500 Internal Server Error | `.htaccess` syntax error or missing extension | Check cPanel Error Log; enable `pdo_pgsql` |
+| "Server error" on login | Cannot connect to Neon DB | Check `config.php` credentials; verify `pdo_pgsql` is enabled |
+| Login page loads but form does nothing | `script.js` not uploaded or wrong version | Re-upload `script.js` from `public/` folder |
+| "username or password incorrect" always | Working as designed — only `admin/admin123` succeeds | This is the intended behaviour |
+| Page shows old content | Browser cache | Press `Ctrl + Shift + R` (hard refresh) |
+| 403 Forbidden | File permissions wrong | Set files to `644`, folders to `755` in File Manager |
+| `config.php` accessible in browser | `.htaccess` not uploaded or not working | Re-upload `.htaccess`; check `mod_rewrite` is enabled |
 
 ---
 
 ## 📞 Rumahweb Support
 
-If you encounter issues specific to Rumahweb's cPanel configuration:
+If you need help enabling `pdo_pgsql`:
 - **Live Chat:** https://www.rumahweb.com
 - **Ticket:** Login to Rumahweb client area → Support → New Ticket
-- **Ask:** *"I need to run a Node.js Express app on my hosting. Is Phusion Passenger / Node.js App Setup enabled on my account?"*
+- **Ask:** *"Please enable the pdo_pgsql and pgsql PHP extensions on my account."*

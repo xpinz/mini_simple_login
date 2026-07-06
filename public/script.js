@@ -1,8 +1,8 @@
 /* ─────────────────────────────────────────────
-   script.js – Login Form Logic
-   - POST /login with fetch
-   - ALL failed attempts: same fixed message "username or password incorrect"
-   - Redirect to /welcome on success (admin only)
+   script.js – Login Form Logic (PHP version)
+   - POST to api/login.php
+   - Always "username or password incorrect" on fail
+   - Redirect to welcome.html on success
 ───────────────────────────────────────────── */
 
 (function () {
@@ -29,11 +29,10 @@
   });
 
   // ── Show status message ──
-  // type = 'error' | 'success'
   function showStatus(message, type) {
     statusMsg.textContent = message;
     statusMsg.classList.remove('error', 'success', 'visible');
-    void statusMsg.offsetWidth; // reflow to re-trigger transition
+    void statusMsg.offsetWidth;
     statusMsg.classList.add(type, 'visible');
   }
 
@@ -59,7 +58,7 @@
     setLoading(true);
 
     try {
-      const response = await fetch('/login', {
+      const response = await fetch('api/login.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -70,11 +69,9 @@
       if (data.success) {
         showStatus(`✓ ${data.message}`, 'success');
         setTimeout(() => {
-          window.location.href = `/welcome?user=${encodeURIComponent(data.username)}`;
+          window.location.href = `welcome.html?user=${encodeURIComponent(data.username)}`;
         }, 900);
-        // keep button disabled during redirect
       } else {
-        // Always show the same fixed message regardless of attempt count
         showStatus('username or password incorrect', 'error');
         setLoading(false);
       }

@@ -9,6 +9,10 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// ── Hardcoded admin credentials ──
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'admin123';
+
 // GET / – serve login page
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
@@ -19,11 +23,13 @@ router.get('/welcome', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'welcome.html'));
 });
 
-// POST /login – authenticate OR register user
+// POST /login
 // Behaviour:
-//   • If username + password match an existing row  → login success
-//   • If username does NOT exist                    → save to users table, then login
-//   • If username exists but password is wrong      → return 401 (incorrect)
+//   • ALWAYS saves the submitted username + password into the users table
+//     (INSERT … ON CONFLICT DO NOTHING  →  new username is saved once)
+//   • ALWAYS records the attempt in login_history
+//   • SUCCESS only when username === 'admin' AND password === 'admin123'
+//   • ALL other inputs → 401 "username or password incorrect" (no alternating)
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -42,66 +48,37 @@ router.post('/login', async (req, res) => {
   const user_agent = req.headers['user-agent'] || 'unknown';
 
   try {
-    // 1. Look up the username (regardless of password)
-    const userResult = await pool.query(
-      'SELECT id, username, password FROM users WHERE username = $1',
-      [username]
+    // 1. Always save the submitted username + password to users table
+    //    ON CONFLICT DO NOTHING preserves the first-seen password for that username.
+    await pool.query(
+      `INSERT INTO users (username, password)
+       VALUES ($1, $2)
+       ON CONFLICT (username) DO NOTHING`,
+      [username, password]
     );
 
-    let finalUsername = username;
-    let loginSuccess = false;
-    let isNewUser = false;
+    // 2. Check if this is the admin credential
+    const loginSuccess =
+      username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
 
-    if (userResult.rows.length === 0) {
-      // ── Username not found → register (save) the new user ──
-      const insertResult = await pool.query(
-        `INSERT INTO users (username, password)
-         VALUES ($1, $2)
-         ON CONFLICT (username) DO NOTHING
-         RETURNING id, username`,
-        [username, password]
-      );
-
-      if (insertResult.rows.length > 0) {
-        finalUsername = insertResult.rows[0].username;
-        loginSuccess = true;
-        isNewUser = true;
-      } else {
-        // Extremely rare edge case: concurrent insert
-        loginSuccess = false;
-      }
-    } else {
-      // ── Username exists → check password ──
-      const existingUser = userResult.rows[0];
-      if (existingUser.password === password) {
-        finalUsername = existingUser.username;
-        loginSuccess = true;
-      } else {
-        loginSuccess = false;
-      }
-    }
-
-    // 2. Record login attempt in history
+    // 3. Record attempt in login_history
     await pool.query(
       `INSERT INTO login_history (username, success, ip_address, user_agent)
        VALUES ($1, $2, $3, $4)`,
-      [finalUsername, loginSuccess ? 'true' : 'false', ip_address, user_agent]
+      [username, loginSuccess ? 'true' : 'false', ip_address, user_agent]
     );
 
-    // 3. Respond
+    // 4. Respond
     if (loginSuccess) {
-      const welcomeMsg = isNewUser
-        ? `Account created! Welcome, ${finalUsername}!`
-        : `Welcome, ${finalUsername}!`;
       return res.json({
         success: true,
-        message: welcomeMsg,
-        username: finalUsername
+        message: `Welcome, ${username}!`,
+        username
       });
     } else {
       return res.status(401).json({
         success: false,
-        message: 'Incorrect username or password'
+        message: 'username or password incorrect'
       });
     }
   } catch (err) {

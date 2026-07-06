@@ -22,8 +22,7 @@
   --text-mid:   #3D5A73;
   --text-light: #6B8FA8;
   --border:     #C8DDE9;
-  --error-odd:  #000000;
-  --error-even: #CC1111;
+  --error:      #CC1111;   /* always same red for failed login */
   --success:    #1A7A45;
   --input-bg:   #F4F9FC;
   --card-bg:    #FFFFFF;
@@ -258,14 +257,8 @@ html, body {
   transform: translateY(0);
 }
 
-.status-msg.error-odd {
-  color: var(--error-odd);
-  background-color: #F2F2F2;
-  border-color: #CCCCCC;
-}
-
-.status-msg.error-even {
-  color: var(--error-even);
+.status-msg.error {
+  color: var(--error);
   background-color: #FFF0F0;
   border-color: #F5B8B8;
 }

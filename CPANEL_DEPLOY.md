@@ -35,7 +35,7 @@ Enter your cPanel **username** and **password**.
 ### 2a. Create the database:
 1. Under "Create New Database", type: `dex_auth`
 2. Click **"Create Database"**
-3. The full name will be like: `cpaneluser_dex_auth` — **copy this name**
+3. The full name will be: `deey2313_dex_auth` — **copy this name**
 
 ### 2b. Create a database user:
 1. Under "MySQL Users → Add New User":
@@ -43,12 +43,12 @@ Enter your cPanel **username** and **password**.
    - Password: Use the **Password Generator** or type a strong password
    - **Copy this password** somewhere safe
 2. Click **"Create User"**
-3. The full username will be like: `cpaneluser_dexuser` — **copy this name**
+3. The full username will be: `deey2313_dexuser` — **copy this name**
 
 ### 2c. Add user to database:
 1. Under "Add User To Database":
-   - Select user: `cpaneluser_dexuser`
-   - Select database: `cpaneluser_dex_auth`
+   - Select user: `deey2313_dexuser`
+   - Select database: `deey2313_dex_auth`
 2. Click **"Add"**
 3. On the next screen, check **"ALL PRIVILEGES"**
 4. Click **"Make Changes"**
@@ -56,8 +56,8 @@ Enter your cPanel **username** and **password**.
 > [!TIP]
 > Write down these 3 values — you'll need them for `config.php`:
 > ```
-> DB_NAME:     cpaneluser_dex_auth
-> DB_USER:     cpaneluser_dexuser
+> DB_NAME:     deey2313_dex_auth
+> DB_USER:     deey2313_dexuser
 > DB_PASSWORD: (the password you set)
 > ```
 
@@ -67,7 +67,7 @@ Enter your cPanel **username** and **password**.
 
 1. In cPanel, scroll to **"Databases"** section
 2. Click **"phpMyAdmin"**
-3. In the left sidebar, click your database name (`cpaneluser_dex_auth`)
+3. In the left sidebar, click your database name (`deey2313_dex_auth`)
 4. Click the **"SQL"** tab at the top
 5. Copy-paste the entire content below into the SQL box:
 
@@ -148,9 +148,9 @@ Click **"Upload"** in File Manager and upload these files:
 
 ```php
 define('DB_HOST',     'localhost');              // keep as localhost
-define('DB_NAME',     'cpaneluser_dex_auth');    // your actual DB name from Step 2
-define('DB_USER',     'cpaneluser_dexuser');     // your actual DB user from Step 2
-define('DB_PASSWORD', 'your_actual_password');   // the password from Step 2
+define('DB_NAME',     'deey2313_dex_auth');      // already set correctly
+define('DB_USER',     'deey2313_dexuser');       // already set correctly
+define('DB_PASSWORD', 'your_actual_password');   // ← ONLY change this line
 ```
 
 4. Click **"Save Changes"**

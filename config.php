@@ -15,8 +15,8 @@
 // ── MySQL Database Credentials ──
 // Replace these with your actual cPanel MySQL values
 define('DB_HOST',     'localhost');              // always 'localhost' on cPanel
-define('DB_NAME',     'YOUR_CPANEL_DB_NAME');    // e.g., 'abc123_dex_auth'
-define('DB_USER',     'YOUR_CPANEL_DB_USER');    // e.g., 'abc123_dexuser'
+define('DB_NAME',     'deey2313_dex_auth');      // created in cPanel → MySQL Databases
+define('DB_USER',     'deey2313_dexuser');       // created in cPanel → MySQL Databases
 define('DB_PASSWORD', 'YOUR_DB_PASSWORD');       // the password you set in cPanel
 
 // ── Admin credentials (only account that can log in) ──

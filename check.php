@@ -62,8 +62,8 @@ header('Content-Type: text/html; charset=UTF-8');
     <span>
       <?php
       require_once __DIR__ . '/config.php';
-      if (DB_NAME === 'YOUR_CPANEL_DB_NAME') {
-          echo '<span class="warn">⚠️ config.php not configured yet – edit DB credentials</span>';
+      if (DB_PASSWORD === 'YOUR_DB_PASSWORD') {
+          echo '<span class="warn">⚠️ config.php not fully configured – edit DB_PASSWORD</span>';
       } else {
           try {
               $db = getDB();
@@ -93,9 +93,9 @@ header('Content-Type: text/html; charset=UTF-8');
 Script Path:   <?= __FILE__ ?>
 Server:        <?= $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown' ?></pre>
 
-  <?php if (DB_NAME === 'YOUR_CPANEL_DB_NAME'): ?>
+  <?php if (DB_PASSWORD === 'YOUR_DB_PASSWORD'): ?>
   <div class="note">
-    <strong>⚠️ Next step:</strong> Edit <code>config.php</code> and fill in your MySQL database credentials from cPanel → MySQL Databases.
+    <strong>⚠️ Next step:</strong> Edit <code>config.php</code> and fill in your MySQL password (DB_PASSWORD). DB name and user are already set to <code>deey2313_dex_auth</code> / <code>deey2313_dexuser</code>.
   </div>
   <?php endif; ?>
 </div>

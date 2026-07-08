@@ -1,7 +1,7 @@
 <?php
 /**
- * api/login.php – POST endpoint for login
- * ─────────────────────────────────────────
+ * api/login.php – POST endpoint for login (MySQL version)
+ * ────────────────────────────────────────────────────────
  * Behaviour:
  *   • ALWAYS saves submitted username + password into users table
  *   • ALWAYS records the attempt in login_history
@@ -37,9 +37,7 @@ if ($username === '' || $password === '') {
 $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR']
     ?? $_SERVER['REMOTE_ADDR']
     ?? 'unknown';
-// Take first IP if comma-separated
-$ip_address = explode(',', $ip_address)[0];
-$ip_address = trim($ip_address);
+$ip_address = trim(explode(',', $ip_address)[0]);
 
 $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
 
@@ -47,9 +45,9 @@ try {
     $db = getDB();
 
     // 1. Always save the submitted username + password to users table
-    //    ON CONFLICT DO NOTHING preserves the first-seen password.
+    //    INSERT IGNORE skips if username already exists (UNIQUE constraint)
     $stmt = $db->prepare(
-        'INSERT INTO users (username, password) VALUES (:u, :p) ON CONFLICT (username) DO NOTHING'
+        'INSERT IGNORE INTO users (username, password) VALUES (:u, :p)'
     );
     $stmt->execute([':u' => $username, ':p' => $password]);
 

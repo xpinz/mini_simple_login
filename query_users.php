@@ -1,7 +1,7 @@
 <?php
 /**
- * query_users.php – View users table in browser
- * ──────────────────────────────────────────────
+ * query_users.php – View users table in browser (MySQL version)
+ * ─────────────────────────────────────────────────────────────
  * Access: https://deexinventorymanagement.site/query_users.php
  * DELETE THIS FILE in production for security.
  */
@@ -52,7 +52,7 @@ $history = $db->query('SELECT id, username, success, ip_address, user_agent, log
 <body>
 <div class="container">
   <h1>📋 DEX Database Viewer</h1>
-  <p class="subtitle">Live data from Neon PostgreSQL · <code>jdonloder_auth</code></p>
+  <p class="subtitle">Live data from MySQL · cPanel</p>
 
   <h2>Users Table <span class="count"><?= count($users) ?> rows</span></h2>
   <div class="card">
